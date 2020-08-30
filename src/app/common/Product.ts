@@ -10,6 +10,8 @@ export class Product {
   public  dateCreated: Date;
   public  dateUpdated: Date;
 
+
+
   constructor(id: number, sku: string, name: string, description: string, unitPrice: number, imageUrl: string,
               active: boolean, unitsInStock: number, dateCreated: Date, dateUpdated: Date) {
     this.id = id;
@@ -23,4 +25,5 @@ export class Product {
     this.dateCreated = dateCreated;
     this.dateUpdated = dateUpdated;
   }
+
 }
