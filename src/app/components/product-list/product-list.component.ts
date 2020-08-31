@@ -9,7 +9,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-
+  searchMode: boolean;
   products: Product[];
   currentCategoryId: number;
   constructor(private productService: ProductService,
@@ -18,11 +18,22 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(() => {
       this.listProducts();
-    })
+    });
     this.listProducts();
   }
   // tslint:disable-next-line:typedef
   listProducts(){
+    this.searchMode = this.route.snapshot.paramMap.has('keyword');
+
+    if (this.searchMode){
+      this.handleSearchProduct();
+    }
+    else {
+      this.productListHandle();
+    }
+  }
+
+  productListHandle(): void {
     const  hascathegoryId: boolean = this.route.snapshot.paramMap.has('id');
     if (hascathegoryId){
       this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
@@ -38,4 +49,12 @@ export class ProductListComponent implements OnInit {
     );
   }
 
+  private handleSearchProduct(): void {
+    const keyword: string = this.route.snapshot.paramMap.get('keyword');
+    this.productService.searchProduct(keyword).subscribe(data =>
+      {
+        this.products = data;
+      }
+    );
+  }
 }
