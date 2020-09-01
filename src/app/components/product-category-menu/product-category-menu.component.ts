@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProductService} from '../../services/product.service';
 import {ProductCategory} from '../../common/ProductCategory';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-product-category-menu',
@@ -11,7 +12,8 @@ export class ProductCategoryMenuComponent implements OnInit {
 
   productCategories: ProductCategory[];
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService ){
+  }
 
   ngOnInit(): void {
     console.log('2');
