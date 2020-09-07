@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ShopFormService} from '../../services/shop-form.service';
 import {Country} from '../../common/country';
 import {State} from '../../common/state';
+import {ValidatorsNew} from '../../validators/validators';
+
 
 @Component({
   selector: 'app-checkout',
@@ -22,15 +24,22 @@ export class CheckoutComponent implements OnInit {
 
 
   constructor(private formBuilder: FormBuilder,
-              private shopForm: ShopFormService) { }
+              private shopForm: ShopFormService) {
+  }
 
   ngOnInit(): void {
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: ['']
+        firstName: new FormControl('', [Validators.required,
+                                                                Validators.minLength(2),
+                                                                ValidatorsNew.notOnlyWhitespace]),
+        lastName: new FormControl('', [Validators.required,
+                                                              Validators.minLength(2),
+          ValidatorsNew.notOnlyWhitespace]),
+        email: new FormControl('', [Validators.required,
+                                                            Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$'),
+          ValidatorsNew.notOnlyWhitespace ])
       }),
       shippingAddress: this.formBuilder.group({
         street: [''],
@@ -56,6 +65,7 @@ export class CheckoutComponent implements OnInit {
       })
     });
 
+
     const startMonth: number = new Date().getMonth() + 1;
     console.log('Start mnt: ' + startMonth);
 
@@ -80,14 +90,26 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
+  get firstName() {
+    return this.checkoutFormGroup.get('customer.firstName');
+  }
+
+  get lastName() {
+    return this.checkoutFormGroup.get('customer.lastName');
+  }
+
+  get email() {
+    return this.checkoutFormGroup.get('customer.email');
+  }
+
+
   copyShippingAddressToBillingAddress(event) {
 
     if (event.target.checked) {
       this.checkoutFormGroup.controls.billingAddress
         .setValue(this.checkoutFormGroup.controls.shippingAddress.value);
       this.billingAddressStates = this.shippingAddressStates;
-    }
-    else {
+    } else {
       this.checkoutFormGroup.controls.billingAddress.reset();
       this.billingAddressStates = [];
     }
@@ -98,11 +120,10 @@ export class CheckoutComponent implements OnInit {
     const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
     const currentYear: number = new Date().getFullYear();
     const selectedYear: number = Number(creditCardFormGroup.value.expirationYear);
-    let  startMont: number;
-    if (currentYear === selectedYear){
+    let startMont: number;
+    if (currentYear === selectedYear) {
       startMont = new Date().getMonth() + 1;
-    }
-    else {
+    } else {
       startMont = 1;
     }
     this.shopForm.getCreditCardMonths(startMont).subscribe(
@@ -128,19 +149,23 @@ export class CheckoutComponent implements OnInit {
 
         if (formGroupName === 'shippingAddress') {
           this.shippingAddressStates = data;
-        }
-        else {
+        } else {
           this.billingAddressStates = data;
         }
 
         // select first item by default
         formGroup.get('state').setValue(data[0]);
+        console.log('FIRST STATE: ==');
+        console.log('formGroup.get().setValue(data[0]);');
       }
     );
   }
 
   onSubmit() {
     console.log('Handling the submit button');
+    if (this.checkoutFormGroup.invalid) {
+      this.checkoutFormGroup.markAllAsTouched();
+    }
     console.log(this.checkoutFormGroup.get('customer').value);
     console.log('The email address is ' + this.checkoutFormGroup.get('customer').value.email);
 

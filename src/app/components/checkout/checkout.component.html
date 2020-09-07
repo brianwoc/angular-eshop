@@ -10,6 +10,14 @@
             <div class="col-md-2"><label>First Name</label></div>
             <div class="col-md-9">
               <input formControlName="firstName" type="text">
+              <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="alert alert-danger mt-1">
+                <div *ngIf="firstName.errors.required || firstName.errors.notOnlyWhitespace">
+                  First Name is required
+                </div>
+                <div *ngIf="firstName.errors.minlength">
+                  First Name must be at least 2 characters long
+                </div>
+              </div>
             </div>
           </div>
 
@@ -17,6 +25,15 @@
             <div class="col-md-2"><label>Last Name</label></div>
             <div class="col-md-9">
               <input formControlName="lastName" type="text">
+              <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="lastName.errors.required || lastName.errors.notOnlyWhitespace">
+                  Last Name is required
+                </div>
+                <div *ngIf="lastName.errors.minlength">
+                  Last Name must be at least 2 characters long
+                </div>
+              </div>
             </div>
           </div>
 
@@ -24,24 +41,33 @@
             <div class="col-md-2"><label>Email</label></div>
             <div class="col-md-9">
               <input formControlName="email" type="text">
+              <div *ngIf="email.invalid && (email.dirty || email.touched)"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="email.errors.required || lastName.errors.notOnlyWhitespace">
+                  Email  is required
+                </div>
+                <div *ngIf="email.errors.pattern">
+                  Wrong Email Pattern
+                </div>
+              </div>
             </div>
           </div>
 
         </div>
 
-<!--        shiping adress-->
+        <!--        shiping adress-->
 
         <div formGroupName="shippingAddress" class="form-area">
           <h3>Shipping Address</h3>
 
           <div class="row">
-            <div class="col-md-2"> <label>Country</label></div>
+            <div class="col-md-2"><label>Country</label></div>
             <div class="col-md-9">
-                <select formControlName="country" (change)="getStates('shippingAddress')">
-                  <option *ngFor="let country of countries" [ngValue]="country">
-                    {{ country.name }}
-                  </option>
-                </select>
+              <select formControlName="country" (change)="getStates('shippingAddress')">
+                <option *ngFor="let country of countries" [ngValue]="country">
+                  {{ country.name }}
+                </option>
+              </select>
             </div>
           </div>
 
@@ -60,13 +86,13 @@
           </div>
 
           <div class="row">
-            <div class="col-md-2"> <label>State</label></div>
+            <div class="col-md-2"><label>State</label></div>
             <div class="col-md-9">
-                <select formControlName="state">
-                  <option *ngFor="let state of shippingAddressStates" [ngValue]="state">
-                    {{ state.name }}
-                  </option>
-                </select>
+              <select formControlName="state">
+                <option *ngFor="let state of shippingAddressStates" [ngValue]="state">
+                  {{ state.name }}
+                </option>
+              </select>
             </div>
           </div>
 
@@ -78,7 +104,7 @@
           </div>
         </div>
 
-<!--        Add check box to copy shipping to billing adress-->
+        <!--        Add check box to copy shipping to billing adress-->
 
         <div class="input-space">
           <label class="au-checkbox">
@@ -87,7 +113,7 @@
 
           </label>
         </div>
-<!--        Billing adress-->
+        <!--        Billing adress-->
 
 
         <div formGroupName="billingAddress" class="form-area">
@@ -141,31 +167,31 @@
 
         <div formGroupName="creditCard" class="form-area">
 
-            <h3>Credit card</h3>
+          <h3>Credit card</h3>
 
-            <div class="row">
-              <div class="col-md-2"><label>Card Type</label></div>
-              <div class="col-md-9">
-                <select formControlName="cardType">
-                  <option>VISA</option>
-                  <option>MASTERCARD</option>
-                </select>
-              </div>
+          <div class="row">
+            <div class="col-md-2"><label>Card Type</label></div>
+            <div class="col-md-9">
+              <select formControlName="cardType">
+                <option>VISA</option>
+                <option>MASTERCARD</option>
+              </select>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-2"><label>Name on card</label></div>
-              <div class="col-md-9">
-                <input formControlName="nameOnCard" type="text">
-              </div>
+          <div class="row">
+            <div class="col-md-2"><label>Name on card</label></div>
+            <div class="col-md-9">
+              <input formControlName="nameOnCard" type="text">
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-2"><label>Car number</label></div>
-              <div class="col-md-9">
-                <input formControlName="cardNumber" type="text">
-              </div>
+          <div class="row">
+            <div class="col-md-2"><label>Car number</label></div>
+            <div class="col-md-9">
+              <input formControlName="cardNumber" type="text">
             </div>
+          </div>
 
           <div class="row">
             <div class="col-md-2"><label>Security Code</label></div>
@@ -185,17 +211,16 @@
           <div class="row">
             <div class="col-md-2"><label>Expiration Year</label></div>
             <div class="col-md-9">
-              <select formControlName="expirationYear"  (change)="handleMonthAndYear()">
+              <select formControlName="expirationYear" (change)="handleMonthAndYear()">
                 <option *ngFor="let year of creditCardYears">{{year}}</option>
               </select>
             </div>
           </div>
 
 
-
         </div>
 
-<!--        Order details-->
+        <!--        Order details-->
 
         <div class="form-area">
           <h3>Review your order</h3>

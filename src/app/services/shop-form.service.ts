@@ -26,7 +26,9 @@ export class ShopFormService {
 
     // search url
     const searchStatesUrl = `${this.statesUrl}/search/findByCountryCode?code=${theCountryCode}`;
-
+    console.log('SEARCH URL')
+    console.log(searchStatesUrl);
+    console.log(this.httpClient.get(searchStatesUrl));
     return this.httpClient.get<GetResponseStates>(searchStatesUrl).pipe(
       map(response => response._embedded.states)
     );
@@ -55,11 +57,11 @@ export class ShopFormService {
 interface GetResponseCountries {
   _embedded: {
     countries: Country[];
-  }
+  };
 }
 
 interface GetResponseStates {
   _embedded: {
     states: State[];
-  }
+  };
 }
